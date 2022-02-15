@@ -1,6 +1,7 @@
 import React from "react";
 import { MdDeleteSweep } from "react-icons/md";
 import { BsPencilSquare } from "react-icons/bs";
+
 const DataView = (props) => {
   return (
     <div>
@@ -10,7 +11,7 @@ const DataView = (props) => {
             if (props.search === "") {
               return item;
             } else {
-              return [item.username.includes(props.search)];
+              return item.username.includes(props.search);
             }
           })
           .map((item) => {

@@ -12,15 +12,13 @@ const CRUD = () => {
   const [password, setPassword] = useState("");
   const [updateId, setUpdateId] = useState("");
   const [updateEmail, setUpdateEmail] = useState("");
+  const [updateUsername, setUpdateUsername] = useState("");
+  const [updatePassword, setUpdatePassword] = useState("");
   const [displayUpdateForm, setDisplayUpdateForm] = useState(false);
   const [search, setSearch] = useState("");
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-  }
-
-  const handleUpdateEmail = (e) => {
-    setUpdateEmail(e.target.value);
   };
 
   const hanldeEmail = (e) => {
@@ -33,6 +31,15 @@ const CRUD = () => {
     setPassword(e.target.value);
   };
 
+  const handleUpdateEmail = (e) => {
+    setUpdateEmail(e.target.value);
+  };
+  const handleUpdateUsername = (e) => {
+    setUpdateUsername(e.target.value);
+  };
+  const handleUpdatePassword = (e) => {
+    setUpdatePassword(e.target.value);
+  };
   // Get method
   useEffect(() => {
     axios
@@ -60,7 +67,6 @@ const CRUD = () => {
     window.location.reload();
   };
 
-
   //Deleting data method
   const deleteUser = (id) => {
     console.log(id);
@@ -72,20 +78,23 @@ const CRUD = () => {
     window.location.reload();
   };
 
-
   //Updating user method
 
   const updateUser = (id) => {
     const filtered = list.filter((user) => user._id === id);
     setUpdateId(filtered[0]._id);
+    setUpdateEmail(filtered[0].email);
+    setUpdateUsername(filtered[0].username);
+    setUpdatePassword(filtered[0].password);
     setDisplayUpdateForm(!displayUpdateForm);
-    console.log(updateId);
   };
   const updateList = () => {
     axios
       .put("http://localhost:3001/update", {
         updateId: updateId,
         updateEmail: updateEmail,
+        updateUsername:updateUsername,
+        updatePassword: updatePassword
       })
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
@@ -93,11 +102,13 @@ const CRUD = () => {
     window.location.reload();
   };
 
-  
   return (
-    <div>
+    <div className="bg-slate-200 pb-10">
       {/* Heading */}
-      <h1 className="text-center bg-slate-700 text-slate-100 py-8 mb-5 text-5xl">MERN CRUD Operation</h1>
+      <h1 className="text-center bg-slate-700 text-slate-100 py-8 mb-5 text-5xl">
+        MERN CRUD Operation
+      </h1>
+
       {/* Form component to add a user */}
       <AddUser
         email={email}
@@ -112,13 +123,22 @@ const CRUD = () => {
       />
 
       {/* View Component to view all the records and perfomr update and delete operations on those records */}
-      <DataView list={list} deleteUser={deleteUser} updateUser={updateUser} search={search} />
+      <DataView
+        list={list}
+        deleteUser={deleteUser}
+        updateUser={updateUser}
+        search={search}
+      />
 
       {/* Update form componenet to update values */}
 
       <UpdateForm
         updateEmail={updateEmail}
         handleUpdateEmail={handleUpdateEmail}
+        updateUsername={updateUsername}
+        handleUpdateUsername={handleUpdateUsername}
+        updatePassword={updatePassword}
+        handleUpdatePassword={handleUpdatePassword}
         updateList={updateList}
         displayUpdateForm={displayUpdateForm}
       />

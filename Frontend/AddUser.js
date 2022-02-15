@@ -84,12 +84,7 @@ const AddUser = (props) => {
             onChange={props.handleSearch}
           />
 
-          <div className="lg:justify-self-start md:justify-self-start sm:justify-self-start">
-            <button type="submit" className={buttonStyling}>
-              <p>Search</p>
-              <FaSearchengin size="1.5rem" />
-            </button>
-          </div>
+         
         </form>
       </div>
     </div>
