@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {FaSearchengin} from 'react-icons/fa'
+
 const AddUser = (props) => {
   const [searchBar, setSearchBar] = useState(false);
 
@@ -84,7 +84,6 @@ const AddUser = (props) => {
             onChange={props.handleSearch}
           />
 
-         
         </form>
       </div>
     </div>

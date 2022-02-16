@@ -18,7 +18,7 @@ const DataView = (props) => {
             return (
               <div
                 key={item._id}
-                className="flex justify-between bg-indigo-900 text-white text-xl 
+                className="flex justify-between bg-indigo-800 text-white text-xl 
             font-semibold font-sans mx-20 py-5 px-10 my-5
             ring-4 ring-indigo-300 rounded-md"
               >

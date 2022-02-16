@@ -16,6 +16,7 @@ const CRUD = () => {
   const [updatePassword, setUpdatePassword] = useState("");
   const [displayUpdateForm, setDisplayUpdateForm] = useState(false);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -50,21 +51,24 @@ const CRUD = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [email, password, username]);
 
   //Saving data method
   const sendData = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:3001/post", {
-        email: email,
-        username: username,
-        password: password,
-      })
-      .then((res) => console.log(`${res}submitted`))
-      .catch((err) => console.log(err));
-
-    window.location.reload();
+    if (list.find((item) => item.username === username)) {
+      setError(true);
+    } else {
+      axios
+        .post("http://localhost:3001/post", {
+          email: email,
+          username: username,
+          password: password,
+        })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+      e.preventDefault();
+      window.location.reload();
+    }
   };
 
   //Deleting data method
@@ -93,8 +97,8 @@ const CRUD = () => {
       .put("http://localhost:3001/update", {
         updateId: updateId,
         updateEmail: updateEmail,
-        updateUsername:updateUsername,
-        updatePassword: updatePassword
+        updateUsername: updateUsername,
+        updatePassword: updatePassword,
       })
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
@@ -103,9 +107,9 @@ const CRUD = () => {
   };
 
   return (
-    <div className="bg-slate-200 pb-10">
+    <div className="bg-slate-200 pb-10 h-auto">
       {/* Heading */}
-      <h1 className="text-center bg-slate-700 text-slate-100 py-8 mb-5 text-5xl">
+      <h1 className="text-center bg-gradient-to-r from-indigo-500 via-indigo-700 to-indigo-900 text-slate-100 py-8 mb-5 text-5xl">
         MERN CRUD Operation
       </h1>
 
@@ -121,6 +125,14 @@ const CRUD = () => {
         search={search}
         handleSearch={handleSearch}
       />
+
+      {/* User Already Exist component */}
+      <div
+        style={{ display: error ? "block" : "none" }}
+        className="bg-red-500 text-white text-center p-5 text-xl font-mono font-bold"
+      >
+        USER ALREADY EXIST
+      </div>
 
       {/* View Component to view all the records and perfomr update and delete operations on those records */}
       <DataView
