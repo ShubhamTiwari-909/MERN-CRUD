@@ -17,6 +17,8 @@ const CRUD = () => {
   const [displayUpdateForm, setDisplayUpdateForm] = useState(false);
   const [search, setSearch] = useState("");
   const [error, setError] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
+  const [userAddedMessage, setUserAddedMessage] = useState(false);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -57,7 +59,14 @@ const CRUD = () => {
   const sendData = (e) => {
     if (list.find((item) => item.username === username)) {
       setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 2000);
     } else {
+      setUserAddedMessage(true);
+      setTimeout(() => {
+        setUserAddedMessage(false)
+      }, 2000);
       axios
         .post("http://localhost:3001/post", {
           email: email,
@@ -73,12 +82,16 @@ const CRUD = () => {
 
   //Deleting data method
   const deleteUser = (id) => {
-    console.log(id);
+    setTimeout(() => {
+      setDeleteMessage(false);
+    }, 3000);
     axios
       .delete(`http://localhost:3001/delete/${id}`)
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
-    window.location.href += "http://localhost:3000/";
+    setDeleteMessage(true);
+
+   
     window.location.reload();
   };
 
@@ -108,6 +121,18 @@ const CRUD = () => {
 
   return (
     <div className="bg-slate-200 pb-10 h-auto">
+      <div
+        style={{ display: deleteMessage ? "block" : "none",transition:"all 1s ease-in-out"}}
+        className="bg-red-500 text-white text-center p-5 text-xl font-mono font-bold"
+      >USER DELETED SUCCESSFULLY
+        </div>
+
+      <div
+        style={{ display: userAddedMessage ? "block" : "none",transition:"all 1s ease-in-out"}}
+        className="bg-green-500 text-white text-center p-5 text-xl font-mono font-bold"
+      >USER ADDED SUCCESSFULLY
+        </div>
+
       {/* Heading */}
       <h1 className="text-center bg-gradient-to-r from-indigo-500 via-indigo-700 to-indigo-900 text-slate-100 py-8 mb-5 text-5xl">
         MERN CRUD Operation
