@@ -4,6 +4,7 @@ import AddUser from "./AddUser";
 import DataView from "./DataView";
 import UpdateForm from "./UpdateForm";
 import "./CRUD.css";
+import SIngleUser from "./SIngleUser";
 
 const CRUD = () => {
   const [list, setList] = useState([]);
@@ -14,11 +15,14 @@ const CRUD = () => {
   const [updateEmail, setUpdateEmail] = useState("");
   const [updateUsername, setUpdateUsername] = useState("");
   const [updatePassword, setUpdatePassword] = useState("");
+  const [singleUser, setSingleUser] = useState([]);
   const [displayUpdateForm, setDisplayUpdateForm] = useState(false);
+  const [displaySingleUser, setDisplaySingleUser] = useState(false);
   const [search, setSearch] = useState("");
   const [error, setError] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [userAddedMessage, setUserAddedMessage] = useState(false);
+  const [updateMessage, setUpdateMessaage] = useState(false);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -43,6 +47,7 @@ const CRUD = () => {
   const handleUpdatePassword = (e) => {
     setUpdatePassword(e.target.value);
   };
+
   // Get method
   useEffect(() => {
     axios
@@ -55,6 +60,17 @@ const CRUD = () => {
       });
   }, [email, password, username]);
 
+  const userDetails = (id) => {
+    setDisplaySingleUser(!displaySingleUser);
+    axios
+      .get(`http://localhost:3001/getuser/${id}`)
+      .then((response) => {
+        setSingleUser(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   //Saving data method
   const sendData = (e) => {
     if (list.find((item) => item.username === username)) {
@@ -63,10 +79,13 @@ const CRUD = () => {
         setError(false);
       }, 2000);
     } else {
-      setUserAddedMessage(true);
-      setTimeout(() => {
-        setUserAddedMessage(false)
-      }, 2000);
+      if (username !== "" && email !== "" && password !== "") {
+        setUserAddedMessage(true);
+        setTimeout(() => {
+          setUserAddedMessage(false);
+        }, 2000);
+      }
+
       axios
         .post("http://localhost:3001/post", {
           email: email,
@@ -91,7 +110,6 @@ const CRUD = () => {
       .catch((err) => console.log(err));
     setDeleteMessage(true);
 
-   
     window.location.reload();
   };
 
@@ -106,6 +124,10 @@ const CRUD = () => {
     setDisplayUpdateForm(!displayUpdateForm);
   };
   const updateList = () => {
+    setUpdateMessaage(true);
+    setTimeout(() => {
+      setUpdateMessaage(false);
+    }, 2000);
     axios
       .put("http://localhost:3001/update", {
         updateId: updateId,
@@ -122,16 +144,24 @@ const CRUD = () => {
   return (
     <div className="bg-slate-200 pb-10 h-auto">
       <div
-        style={{ display: deleteMessage ? "block" : "none",transition:"all 1s ease-in-out"}}
+        style={{ display: deleteMessage ? "block" : "none" }}
         className="bg-red-500 text-white text-center p-5 text-xl font-mono font-bold"
-      >USER DELETED SUCCESSFULLY
-        </div>
+      >
+        USER DELETED SUCCESSFULLY
+      </div>
 
       <div
-        style={{ display: userAddedMessage ? "block" : "none",transition:"all 1s ease-in-out"}}
+        style={{ display: userAddedMessage ? "block" : "none" }}
         className="bg-green-500 text-white text-center p-5 text-xl font-mono font-bold"
-      >USER ADDED SUCCESSFULLY
-        </div>
+      >
+        USER ADDED SUCCESSFULLY
+      </div>
+      <div
+        style={{ display: updateMessage ? "block" : "none" }}
+        className="bg-blue-500 text-white text-center p-5 text-xl font-mono font-bold"
+      >
+        USER UPDATED SUCCESSFULLY
+      </div>
 
       {/* Heading */}
       <h1 className="text-center bg-gradient-to-r from-indigo-500 via-indigo-700 to-indigo-900 text-slate-100 py-8 mb-5 text-5xl">
@@ -165,6 +195,12 @@ const CRUD = () => {
         deleteUser={deleteUser}
         updateUser={updateUser}
         search={search}
+        userDetails={userDetails}
+      />
+
+      <SIngleUser
+        singleuser={singleUser}
+        displaySingleUser={displaySingleUser}
       />
 
       {/* Update form componenet to update values */}
